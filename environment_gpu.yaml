@@ -1,4 +1,4 @@
-name: comsw4733_hw4
+name: venv
 channels:
   - pytorch
   - conda-forge
