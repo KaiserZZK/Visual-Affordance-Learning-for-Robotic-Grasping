@@ -10,11 +10,11 @@ and follow the [installation instructions](https://github.com/conda-forge/minifo
 2. After installation and initialization (i.e. conda init), 
 launch a new terminal and run:
 ```shell
-mamba env create -f environment gpu.yaml
+mamba env create -f environment_gpu.yaml
 ```
 if you have an Nvidia GPU on your computer, or
 ```shell
-mamba env create -f environment cpu.yaml
+mamba env create -f environment_cpu.yaml
 ```
 otherwise, inside the home directory (`./`) . 
 This will create a new `venv` environment, 
