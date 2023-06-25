@@ -24,7 +24,7 @@ mamba activate venv
 ```
 
 ## Generating training data
-The training data are geenrated in this direcotry; but if ur intertested
+The training data are geenrated in [this direcotry](./data/labels); but if ur intertested
 in customizing 
 
 (explain it a bit) pixel x,y, and angle, rotation we follow [the
@@ -49,3 +49,13 @@ Label 5 training objects with 12 attempts each. This usually take around
 up similar to a small dot and makes it hard identify a grasping pose: try to 
 click its center and position the gripper in any reasonable orientation.
 
+## Model implementation and training 
+The Train loss: 0.0012 and the Test loss: 0.0011.
+
+15/15 picked up; here is [a video demo]()
+[2f](https://drive.google.com/file/d/1dWeUKuE8m-GtMdkNEcTAUNQsTxbnP0WC/view)
+[2g](https://drive.google.com/file/d/1e8HI5OHMS88Ywdosk3it1a4uNcB6w38x/view)
+[3a]()
+[3b]()
+
+[4c](https://drive.google.com/file/d/1Q9LcQxrtYUXTB1zSPpcEyC7mNL_jyKkc/view)
