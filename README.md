@@ -284,11 +284,63 @@ Same to the previous part, we are still picking up and placing all 15 items.
 Please click [here](https://drive.google.com/file/d/1Pe7A8Xu1NUkakIIhchLSH8jQZFe4x8p9/view)
 for a video demo.
 
-### 4: 
+### 4a: Alternative method: Action Regression
 
-### 4c
+In the visual affordance formulation above, aligning the action with images allows 
+us to effectively discretize the action space. In contrast, an action regression model outputs 
+the action as a vector: this is the most common action representation prior to 
+the popularization of visual affordance. 
 
-In this part, all objects are left. 
+More specifically, we will predict the vector `(x,y,angle)` with each dimension 
+normalized to between 0 and 1.
+
+Execute the following command to train the model:
+```shell
+python3 train.py --model action_regression --augmentation
+```
+Alternatively: 
+```shell
+sh scripts/run_4a.sh
+```
+
+The train loss and test (validation) loss should be around 0.0246 and 0.0273 respectively.
+Here is an example visualization from 
+`data/action_regression/training_vis/`:
+
+![visualization](./data/action_regression/training_vis/003.png)
+
+### 4b: Evaluation on training objects
+
+Execute the following command to evaluate on training objects:
+```shell
+python3 eval.py --model action_regression --task pick_training
+```
+Alternatively: 
+```shell
+sh scripts/run_4b.sh
+```
+The grasping success rate drops to 33.3%. Please click [here](https://drive.google.com/file/d/1NbVi-mq3GxBxXU64iN32guRaJh6qgqNb/view)
+for a video demo.
+Here is an example visualization from 
+`data/action_regression/eval_pick_training_vis/`:
+
+![visualization](./data/action_regression/eval_pick_training_vis/YcbMustardBottle_1.png)
+
+### 4c: Evaluation on all objects 
+
+Execute:
+```shell
+python3 eval.py --model action_regression --task empty_bin --seed 2
+```
+Alternatively: 
+```shell
+sh scripts/run_4c.sh
+```
+
+Oops, we're only able to pick up 1 object this time.
+
+Please click [here](https://drive.google.com/file/d/1Q9LcQxrtYUXTB1zSPpcEyC7mNL_jyKkc/view)
+for a video demo.
 
 
 ### why worse performance?
@@ -298,32 +350,3 @@ action vector in a regression task, especially in the situation without
 much available training data. The affordance map provides a much more detailed
 representation of the object and the relevant information around. This is 
 especially true in low data regime.
-
-
-### unfinished parts 
-
-**template:**
-
-Execute:
-```shell
-python3 eval.py --model affordance --task empty_bin --seed 2
-```
-Alternatively: 
-```shell
-sh scripts/run_2h_eval_mixed.sh
-```
-
-The model performs worse than on the training set, 
-now with around 68.0% success rate. Please click [here]()
-for a video demo. Here is an example visualization from 
-`data/affordance/eval_pick_testing_vis/`:
-
-![training visualization]()
-
-
-
-
-[4a](https://drive.google.com/file/d/1c8mHAHMVHJhHb2WzCg5_e1as4v4my-a3/view)
-[4b](https://drive.google.com/file/d/1NbVi-mq3GxBxXU64iN32guRaJh6qgqNb/view)
-
-[4c](https://drive.google.com/file/d/1Q9LcQxrtYUXTB1zSPpcEyC7mNL_jyKkc/view)
