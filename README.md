@@ -164,24 +164,166 @@ The prediction code has a success rate of 93.3%
 Please click [here](https://drive.google.com/file/d/1dWeUKuE8m-GtMdkNEcTAUNQsTxbnP0WC/view)
 for a video demo. Here is an example visualization from 
 `data/affordance/eval_pick_training_vis/`:
+
 ![training visualization](./data/affordance/eval_pick_training_vis/YcbMustardBottle_1.png)
 
+### 2g: Evaluation on novel objects
+
+Execute the following command to evaluate the model on a novel set of objects 
+that were not included in the training dataset:
+```shell
+python3 eval.py --model affordance --task pick_testing --n_past_actions 1
+```
+Alternatively: 
+```shell
+sh scripts/run_2g_eval_test_nopast.sh
+```
+
+The model performs worse than on the training set, 
+now with around 68.0% success rate. Please click [here](https://drive.google.com/file/d/1e8HI5OHMS88Ywdosk3it1a4uNcB6w38x/view)
+for a video demo. Here is an example visualization from 
+`data/affordance/eval_pick_testing_vis/`:
+
+![training visualization](./data/affordance/eval_pick_testing_vis/YcbChipsCan_5.png)
+
+
+### 2h: Evaluation on mixed objects
+
+Execute:
+```shell
+python3 eval.py --model affordance --task empty_bin --seed 2
+```
+Alternatively: 
+```shell
+sh scripts/run_2h_eval_mixed.sh
+```
+
+This command will load 15 objects into a bin, and the model 
+tries to move all of them into another bin within 25 attempts. 
+In this part, we grasped all 15 items loaded them into the target bin. 
+
+Please click [here](https://drive.google.com/file/d/1vXZfo5f_997eglfva2_-B83DH6JRqh0C/view)
+for a video demo. 
+
+### Why is the method sample-efficient?
+
+Why does our model performs well on seen and relatively well on unseen objects 
+despite given only 60 images to train?
+
+The visual affordance map helps the neural network to recognize objects in 
+an image, and we only need the network to learn how to perform a horizontal grasp. 
+It is sample-efficient because we can rotate the same image 8 times to create 
+an 8 times bigger dataset to let the network learn grasping horizontally to achieve 
+the same effect with an 8 times bigger dataset. 
+Thus, it is sample efficient. 
+
+The gaussian scoremap helps the network to be more robust and generalizable so that 
+it is able to generalize to object that has not seen before.
+
+### 3a: Improving Test-time Performance of Visual Affordance model
+
+The trained model does not succeed 100% at test (validation) time. 
+Recall that in the visual affordance model, the spatial-action map formulation is 
+essentially looking at an image observation and finding the best pixel to act on. 
+So if an action turns out to fail after executing the grasp, the robot can try 
+again and select the next best pixel/action. 
+
+Below is an illustration for the test-time improvement idea: 
+add a buffer of past failed actions to the model, such that it 
+selects the next-best actions when making a new attempt.
+
+![illustration](./illustrations/buffer.png)
+
+This idea is implemented in `affordance_model.py`, so that the model can hold 
+a list of past actions. 
+During evaluation, we make the model attempts to grasp an object multiple times by 
+setting the command line argument `--n_past action_8` and keep track of the 
+failed pixels’ actions, such that for each new attempt, 
+it avoids those before selecting a new action.
+
+Execute the following command to evaluate on training objects:
+```shell
+python3 eval.py --model affordance --task pick_training --n_past_actions 8
+```
+Alternatively: 
+```shell
+sh scripts/run_3a_eval_train.sh
+```
+The grasping success rate stays at 93.3%. Please click [here](https://drive.google.com/file/d/16HvKohbwJLPg6PGY_EzY_sEfPrLVZ_aJ/view)
+for a video demo.
+
+
+### 3b: Evaluation on validation objects
+
+Execute the following command to evaluate on validation objects:
+```shell
+python3 eval.py --model affordance --task pick_testing --n_past_actions 8
+```
+Alternatively: 
+```shell
+sh scripts/run_3b_eval_test_past8.sh
+```
+
+Good news, we see a major improvement! 
+The grasping success rate for validation set is now increased to 100%. 
+Please click [here](https://drive.google.com/file/d/1n5WYgc7arkMOfghnMxnytCgizIeer3Jl/view)
+for a video demo.
+
+### 3c: Evaluation on mixed objects
+
+Execute:
+```shell
+python3 eval.py --model affordance --task empty_bin --seed 2 --n_past_actions 25
+```
+Alternatively: 
+```shell
+sh scripts/run_3c.sh
+```
+
+Same to the previous part, we are still picking up and placing all 15 items. 
+Please click [here](https://drive.google.com/file/d/1Pe7A8Xu1NUkakIIhchLSH8jQZFe4x8p9/view)
+for a video demo.
+
+### 4: 
+
+### 4c
+
+In this part, all objects are left. 
+
+
+### why worse performance?
+The performance is much worse because the affordance map provides a 
+more dense and informative learning signal than a 3- dimensional 
+action vector in a regression task, especially in the situation without 
+much available training data. The affordance map provides a much more detailed
+representation of the object and the relevant information around. This is 
+especially true in low data regime.
+
+
+### unfinished parts 
+
+**template:**
+
+Execute:
+```shell
+python3 eval.py --model affordance --task empty_bin --seed 2
+```
+Alternatively: 
+```shell
+sh scripts/run_2h_eval_mixed.sh
+```
+
+The model performs worse than on the training set, 
+now with around 68.0% success rate. Please click [here]()
+for a video demo. Here is an example visualization from 
+`data/affordance/eval_pick_testing_vis/`:
+
+![training visualization]()
 
 
 
 
-15/15 picked up; here is [a video demo]()
-
-
-[2g](https://drive.google.com/file/d/1e8HI5OHMS88Ywdosk3it1a4uNcB6w38x/view)
-
-[3a]()
-
-[3b]()
+[4a](https://drive.google.com/file/d/1c8mHAHMVHJhHb2WzCg5_e1as4v4my-a3/view)
+[4b](https://drive.google.com/file/d/1NbVi-mq3GxBxXU64iN32guRaJh6qgqNb/view)
 
 [4c](https://drive.google.com/file/d/1Q9LcQxrtYUXTB1zSPpcEyC7mNL_jyKkc/view)
-
-
-below is a visualization
-
-![viz](./data/affordance/training_vis/000.png)
